@@ -1,0 +1,38 @@
+[package]
+name = "mcp-server"
+version = "0.1.0"
+edition = "2021"
+description = "Rust MCP server exposing safe coding tools for the local RAG coding assistant"
+
+[[bin]]
+name = "local-code-agent"
+path = "src/main.rs"
+
+[dependencies]
+# Workspace deps
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+ignore = { workspace = true }
+walkdir = { workspace = true }
+regex = { workspace = true }
+glob = { workspace = true }
+
+# MCP protocol
+rmcp = { workspace = true }
+
+# JSON Schema generation
+schemars = { workspace = true }
+
+# Internal crates
+safety = { path = "../safety" }
+git-tools = { path = "../git-tools" }
+workspace-index = { path = "../workspace-index" }
+code-search = { path = "../code-search" }
+symbol-index = { path = "../symbol-index" }
+docs-rag = { path = "../docs-rag" }
+verifier = { path = "../verifier" }

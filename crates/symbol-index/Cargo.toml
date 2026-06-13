@@ -1,0 +1,21 @@
+[package]
+name = "symbol-index"
+version = "0.1.0"
+edition = "2021"
+description = "Tree-sitter-based symbol extraction and symbol search for multiple languages"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tree-sitter = { workspace = true }
+tree-sitter-rust = { workspace = true }
+tree-sitter-python = { workspace = true }
+tree-sitter-javascript = { workspace = true }
+tree-sitter-typescript = { workspace = true }
+ignore = { workspace = true }
+regex = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"
