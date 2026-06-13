@@ -1,0 +1,18 @@
+[package]
+name = "docs-rag"
+version = "0.1.0"
+edition = "2021"
+description = "Documentation and convention RAG: chunking, indexing, and retrieval of project docs"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tantivy = { workspace = true }
+ignore = { workspace = true }
+walkdir = { workspace = true }
+regex = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"
