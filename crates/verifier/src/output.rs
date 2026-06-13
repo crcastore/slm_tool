@@ -11,7 +11,13 @@ pub fn summarize(result: &CommandResult) -> String {
 
     let status = match result.exit_code {
         Some(0) => "PASS",
-        Some(code) => return format!("FAIL (exit {}): {}", code, extract_first_error(&result.stderr_tail)),
+        Some(code) => {
+            return format!(
+                "FAIL (exit {}): {}",
+                code,
+                extract_first_error(&result.stderr_tail)
+            )
+        }
         None => "FAIL (no exit code)",
     };
 
@@ -53,9 +59,6 @@ pub fn format_test_output(result: &CommandResult) -> String {
         out.push_str(&result.stderr_tail);
         out.push('\n');
     }
-    out.push_str(&format!(
-        "--- exit code: {:?} ---\n",
-        result.exit_code
-    ));
+    out.push_str(&format!("--- exit code: {:?} ---\n", result.exit_code));
     out
 }

@@ -43,10 +43,7 @@ pub fn git_diff(repo: &Repository, path_filter: Option<&str>) -> Result<Workspac
         opts.pathspec(p);
     }
 
-    let head_tree = repo
-        .head()
-        .ok()
-        .and_then(|h| h.peel_to_tree().ok());
+    let head_tree = repo.head().ok().and_then(|h| h.peel_to_tree().ok());
 
     let diff = repo.diff_tree_to_workdir_with_index(head_tree.as_ref(), Some(&mut opts))?;
 

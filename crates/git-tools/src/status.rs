@@ -39,10 +39,7 @@ pub fn git_status(repo: &Repository) -> Result<WorkspaceStatus, GitError> {
     let mut files = Vec::new();
 
     for entry in statuses.iter() {
-        let path = entry
-            .path()
-            .unwrap_or("<invalid utf-8>")
-            .to_string();
+        let path = entry.path().unwrap_or("<invalid utf-8>").to_string();
         let status = format_status(entry.status());
         files.push(FileStatus { path, status });
     }

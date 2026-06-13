@@ -1,5 +1,5 @@
 use crate::IndexError;
-use rusqlite::{Connection, params};
+use rusqlite::{params, Connection};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -192,7 +192,10 @@ pub fn count_lines(path: impl AsRef<Path>) -> std::io::Result<u64> {
 
 /// Build a `PathBuf` relative to `workspace_root` for storing in the DB.
 pub fn relative_path(workspace_root: &Path, abs_path: &Path) -> Option<PathBuf> {
-    abs_path.strip_prefix(workspace_root).ok().map(|p| p.to_path_buf())
+    abs_path
+        .strip_prefix(workspace_root)
+        .ok()
+        .map(|p| p.to_path_buf())
 }
 
 #[cfg(test)]

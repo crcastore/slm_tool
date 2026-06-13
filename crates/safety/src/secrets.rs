@@ -23,12 +23,30 @@ pub struct SecretFinding {
 /// patterns rather than trying to match every possible secret format.
 static SECRET_PATTERNS: &[(&str, &str)] = &[
     (r#"(?i)(api[_-]?key|apikey)\s*=\s*['"][^'"]{8,}"#, "api_key"),
-    (r#"(?i)(secret[_-]?key|secretkey)\s*=\s*['"][^'"]{8,}"#, "secret_key"),
-    (r#"(?i)(password|passwd|pwd)\s*=\s*['"][^'"]{4,}"#, "password"),
-    (r#"(?i)(access[_-]?token|auth[_-]?token)\s*=\s*['"][^'"]{8,}"#, "token"),
-    (r#"(?i)(private[_-]?key|privkey)\s*=\s*['"][^'"]{8,}"#, "private_key"),
-    (r"-----BEGIN (RSA|EC|DSA|OPENSSH) PRIVATE KEY-----", "private_key_block"),
-    (r"(?i)aws[_-]?access[_-]?key[_-]?id\s*=\s*[A-Z0-9]{16,}", "aws_key"),
+    (
+        r#"(?i)(secret[_-]?key|secretkey)\s*=\s*['"][^'"]{8,}"#,
+        "secret_key",
+    ),
+    (
+        r#"(?i)(password|passwd|pwd)\s*=\s*['"][^'"]{4,}"#,
+        "password",
+    ),
+    (
+        r#"(?i)(access[_-]?token|auth[_-]?token)\s*=\s*['"][^'"]{8,}"#,
+        "token",
+    ),
+    (
+        r#"(?i)(private[_-]?key|privkey)\s*=\s*['"][^'"]{8,}"#,
+        "private_key",
+    ),
+    (
+        r"-----BEGIN (RSA|EC|DSA|OPENSSH) PRIVATE KEY-----",
+        "private_key_block",
+    ),
+    (
+        r"(?i)aws[_-]?access[_-]?key[_-]?id\s*=\s*[A-Z0-9]{16,}",
+        "aws_key",
+    ),
     (r"AKIA[0-9A-Z]{16}", "aws_access_key_id"),
     (r"(?i)bearer\s+[a-zA-Z0-9\-._~+/]{32,}", "bearer_token"),
 ];
@@ -44,11 +62,7 @@ impl SecretScanner {
     pub fn new() -> Self {
         let patterns = SECRET_PATTERNS
             .iter()
-            .filter_map(|(pat, kind)| {
-                regex::Regex::new(pat)
-                    .ok()
-                    .map(|re| (re, kind.to_string()))
-            })
+            .filter_map(|(pat, kind)| regex::Regex::new(pat).ok().map(|re| (re, kind.to_string())))
             .collect();
         Self { patterns }
     }

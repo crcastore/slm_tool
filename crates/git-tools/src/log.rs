@@ -28,11 +28,7 @@ pub fn recent_commits(
         let oid = oid?;
         let commit = repo.find_commit(oid)?;
         let author = commit.author();
-        let message = commit
-            .message()
-            .unwrap_or("")
-            .trim()
-            .to_string();
+        let message = commit.message().unwrap_or("").trim().to_string();
         commits.push(CommitInfo {
             hash: oid.to_string(),
             short_hash: oid.to_string()[..7].to_string(),
@@ -71,11 +67,7 @@ pub fn file_log(
         let touches_file = touches_file_path(&repo, &commit, &file_str);
         if touches_file {
             let author = commit.author();
-            let message = commit
-                .message()
-                .unwrap_or("")
-                .trim()
-                .to_string();
+            let message = commit.message().unwrap_or("").trim().to_string();
             commits.push(CommitInfo {
                 hash: oid.to_string(),
                 short_hash: oid.to_string()[..7].to_string(),
@@ -114,11 +106,9 @@ fn touches_file_path(repo: &git2::Repository, commit: &git2::Commit, file_path: 
         let mut diff_opts = git2::DiffOptions::new();
         diff_opts.pathspec(file_path);
 
-        if let Ok(diff) = repo.diff_tree_to_tree(
-            Some(&parent_tree),
-            Some(&tree),
-            Some(&mut diff_opts),
-        ) {
+        if let Ok(diff) =
+            repo.diff_tree_to_tree(Some(&parent_tree), Some(&tree), Some(&mut diff_opts))
+        {
             if diff.deltas().len() > 0 {
                 return true;
             }

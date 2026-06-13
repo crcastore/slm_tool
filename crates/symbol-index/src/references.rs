@@ -22,6 +22,18 @@ impl ReferenceIndex {
         Self::default()
     }
 
+    pub fn clear(&mut self) {
+        self.refs.clear();
+    }
+
+    pub fn len(&self) -> usize {
+        self.refs.values().map(Vec::len).sum()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.refs.is_empty()
+    }
+
     /// Index `content` for references to each symbol in `symbols`.
     ///
     /// This is a lightweight text-search approach: a reference is any line
@@ -33,7 +45,7 @@ impl ReferenceIndex {
                 for (line_idx, line) in content.lines().enumerate() {
                     if re.is_match(line) {
                         self.refs
-                            .entry(symbol.name.clone())
+                            .entry(symbol.name.to_lowercase())
                             .or_default()
                             .push(Reference {
                                 path: path.to_string(),
@@ -49,7 +61,7 @@ impl ReferenceIndex {
     /// Return all references to `name`.
     pub fn find_references(&self, name: &str) -> Vec<&Reference> {
         self.refs
-            .get(name)
+            .get(&name.to_lowercase())
             .map(|v| v.iter().collect())
             .unwrap_or_default()
     }

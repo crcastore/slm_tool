@@ -49,10 +49,7 @@ pub fn kind_for_path(path: &str) -> ChunkKind {
         return ChunkKind::Tests;
     }
     if lower.ends_with(".md") || lower.ends_with(".rst") || lower.ends_with(".txt") {
-        if lower.contains("adr")
-            || lower.contains("architecture")
-            || lower.contains("design")
-        {
+        if lower.contains("adr") || lower.contains("architecture") || lower.contains("design") {
             return ChunkKind::Architecture;
         }
         if lower.contains("readme")
@@ -86,12 +83,7 @@ pub fn kind_for_path(path: &str) -> ChunkKind {
 
 /// Split `content` into overlapping chunks of approximately `chunk_size` lines
 /// with `overlap` lines of overlap between adjacent chunks.
-pub fn chunk_text(
-    path: &str,
-    content: &str,
-    chunk_size: usize,
-    overlap: usize,
-) -> Vec<Chunk> {
+pub fn chunk_text(path: &str, content: &str, chunk_size: usize, overlap: usize) -> Vec<Chunk> {
     let kind = kind_for_path(path);
     let lines: Vec<&str> = content.lines().collect();
     if lines.is_empty() {
@@ -147,7 +139,10 @@ mod tests {
     #[test]
     fn test_kind_detection() {
         assert_eq!(kind_for_path("README.md"), ChunkKind::Docs);
-        assert_eq!(kind_for_path("docs/architecture/adr-01.md"), ChunkKind::Architecture);
+        assert_eq!(
+            kind_for_path("docs/architecture/adr-01.md"),
+            ChunkKind::Architecture
+        );
         assert_eq!(kind_for_path("tests/auth_test.rs"), ChunkKind::Tests);
         assert_eq!(kind_for_path("openapi.yaml"), ChunkKind::Api);
         assert_eq!(kind_for_path("src/main.rs"), ChunkKind::Code);

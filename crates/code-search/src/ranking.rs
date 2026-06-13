@@ -9,10 +9,7 @@ use crate::tantivy_index::SearchResult;
 ///
 /// The re-ranker mutates the scores in-place and sorts the results.
 pub fn rerank(results: &mut Vec<SearchResult>, query: &str) {
-    let query_terms: Vec<String> = query
-        .split_whitespace()
-        .map(|t| t.to_lowercase())
-        .collect();
+    let query_terms: Vec<String> = query.split_whitespace().map(|t| t.to_lowercase()).collect();
 
     for result in results.iter_mut() {
         let path_lower = result.path.to_lowercase();
@@ -34,7 +31,11 @@ pub fn rerank(results: &mut Vec<SearchResult>, query: &str) {
     }
 
     // Sort by score descending.
-    results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
+    results.sort_by(|a, b| {
+        b.score
+            .partial_cmp(&a.score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 }
 
 #[cfg(test)]

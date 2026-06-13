@@ -2,8 +2,8 @@ pub mod crawler;
 pub mod metadata;
 pub mod watcher;
 
-pub use metadata::{FileMetadata, MetadataDb};
 pub use crawler::crawl_workspace;
+pub use metadata::{FileMetadata, MetadataDb};
 pub use watcher::WorkspaceWatcher;
 
 use thiserror::Error;

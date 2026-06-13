@@ -3,6 +3,9 @@ pub mod embeddings;
 pub mod search;
 
 pub use chunking::{chunk_text, Chunk, ChunkKind};
+pub use embeddings::{
+    Embedding, EmbeddingError, OllamaEmbeddingClient, SemanticDocsIndex, SemanticSearchResult,
+};
 pub use search::{DocsIndex, DocsSearchResult};
 
 use thiserror::Error;

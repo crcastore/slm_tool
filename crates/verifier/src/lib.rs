@@ -2,8 +2,8 @@ pub mod allowlist;
 pub mod commands;
 pub mod output;
 
-pub use commands::{run_command, CommandResult};
 pub use allowlist::ALLOWED_COMMANDS;
+pub use commands::{run_command, CommandResult};
 
 use thiserror::Error;
 

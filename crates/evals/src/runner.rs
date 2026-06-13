@@ -68,22 +68,18 @@ impl EvalRunner {
         metrics
     }
 
-    fn write_results(
-        &self,
-        results: &[TaskResult],
-        metrics: &EvalMetrics,
-    ) -> std::io::Result<()> {
+    fn write_results(&self, results: &[TaskResult], metrics: &EvalMetrics) -> std::io::Result<()> {
         std::fs::create_dir_all(&self.config.output_dir)?;
         let ts = chrono::Utc::now().format("%Y%m%d_%H%M%S");
 
         let results_path = self.config.output_dir.join(format!("results_{ts}.json"));
-        let results_json = serde_json::to_string_pretty(results)
-            .unwrap_or_else(|_| "[]".to_string());
+        let results_json =
+            serde_json::to_string_pretty(results).unwrap_or_else(|_| "[]".to_string());
         std::fs::write(&results_path, results_json)?;
 
         let metrics_path = self.config.output_dir.join(format!("metrics_{ts}.json"));
-        let metrics_json = serde_json::to_string_pretty(metrics)
-            .unwrap_or_else(|_| "{}".to_string());
+        let metrics_json =
+            serde_json::to_string_pretty(metrics).unwrap_or_else(|_| "{}".to_string());
         std::fs::write(&metrics_path, metrics_json)?;
 
         Ok(())

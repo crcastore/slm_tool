@@ -126,8 +126,14 @@ impl EvalMetrics {
         );
         println!("Avg tool calls: {:.1}", self.avg_tool_calls);
         println!("Avg duration: {:.0}ms", self.avg_duration_ms);
-        println!("Hallucination rate: {:.0}%", self.hallucination_rate * 100.0);
-        println!("Keyword match rate: {:.0}%", self.keywords_match_rate * 100.0);
+        println!(
+            "Hallucination rate: {:.0}%",
+            self.hallucination_rate * 100.0
+        );
+        println!(
+            "Keyword match rate: {:.0}%",
+            self.keywords_match_rate * 100.0
+        );
         println!("File match rate: {:.0}%", self.files_match_rate * 100.0);
     }
 }
@@ -146,13 +152,7 @@ mod tests {
 
     #[test]
     fn test_metrics_from_results() {
-        let task = EvalTask::new(
-            TaskKind::FindImplementation,
-            "test",
-            ".",
-            vec![],
-            vec![],
-        );
+        let task = EvalTask::new(TaskKind::FindImplementation, "test", ".", vec![], vec![]);
         let mut r = TaskResult::new(&task);
         r.success = true;
         let metrics = EvalMetrics::from_results(&[r]);

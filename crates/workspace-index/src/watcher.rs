@@ -72,9 +72,7 @@ impl WorkspaceWatcher {
     }
 }
 
-fn take_snapshot(
-    root: &Path,
-) -> std::collections::HashMap<PathBuf, std::time::SystemTime> {
+fn take_snapshot(root: &Path) -> std::collections::HashMap<PathBuf, std::time::SystemTime> {
     use ignore::WalkBuilder;
     let mut map = std::collections::HashMap::new();
     if !root.exists() {

@@ -29,8 +29,7 @@ pub async fn run_command(
     timeout_secs: u64,
 ) -> Result<CommandResult, VerifierError> {
     // Validate against the allowlist.
-    allowlist::is_allowed(command)
-        .map_err(|e| VerifierError::NotAllowed(e))?;
+    allowlist::is_allowed(command).map_err(|e| VerifierError::NotAllowed(e))?;
 
     let parts: Vec<&str> = command.split_whitespace().collect();
     if parts.is_empty() {
@@ -43,17 +42,20 @@ pub async fn run_command(
 
     // Strip sensitive environment variables; only forward safe ones.
     cmd.env_clear();
-    for key in &["PATH", "HOME", "RUSTUP_HOME", "CARGO_HOME", "GOPATH", "GOROOT"] {
+    for key in &[
+        "PATH",
+        "HOME",
+        "RUSTUP_HOME",
+        "CARGO_HOME",
+        "GOPATH",
+        "GOROOT",
+    ] {
         if let Ok(val) = std::env::var(key) {
             cmd.env(key, val);
         }
     }
 
-    let run = timeout(
-        Duration::from_secs(timeout_secs),
-        cmd.output(),
-    )
-    .await;
+    let run = timeout(Duration::from_secs(timeout_secs), cmd.output()).await;
 
     match run {
         Err(_) => Ok(CommandResult {

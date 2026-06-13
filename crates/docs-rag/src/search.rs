@@ -1,5 +1,5 @@
 use crate::{
-    chunking::{chunk_text, kind_for_path, ChunkKind},
+    chunking::{chunk_text, ChunkKind},
     DocsError,
 };
 use serde::{Deserialize, Serialize};
@@ -8,7 +8,7 @@ use tantivy::{
     collector::TopDocs,
     doc,
     query::QueryParser,
-    schema::{Schema, STRING, STORED, TEXT, Value},
+    schema::{Schema, Value, STORED, STRING, TEXT},
     Index, IndexWriter, TantivyDocument,
 };
 
@@ -65,15 +65,21 @@ impl DocsIndex {
         Ok(self.index.writer(50_000_000)?)
     }
 
+    /// Remove all documents from the index.
+    pub fn clear(&self) -> Result<(), DocsError> {
+        let mut writer = self.writer()?;
+        writer.delete_all_documents()?;
+        writer.commit()?;
+        Ok(())
+    }
+
     /// Index a workspace, processing only documentation-relevant files.
-    pub fn index_workspace(
-        &self,
-        workspace_root: impl AsRef<Path>,
-    ) -> Result<u64, DocsError> {
+    pub fn index_workspace(&self, workspace_root: impl AsRef<Path>) -> Result<u64, DocsError> {
         use ignore::WalkBuilder;
 
         let root = workspace_root.as_ref();
         let mut writer = self.writer()?;
+        writer.delete_all_documents()?;
         let mut total = 0u64;
 
         let walker = WalkBuilder::new(root)
@@ -182,7 +188,8 @@ impl DocsIndex {
         let query_parser = QueryParser::for_index(&self.index, vec![content_field]);
         let parsed = query_parser.parse_query(query)?;
 
-        let top_docs = searcher.search(&parsed, &TopDocs::with_limit(limit * 2).order_by_score())?;
+        let top_docs =
+            searcher.search(&parsed, &TopDocs::with_limit(limit * 2).order_by_score())?;
 
         let mut results = Vec::new();
         for (score, doc_address) in top_docs {
@@ -205,8 +212,14 @@ impl DocsIndex {
                 .and_then(|v| v.as_str())
                 .unwrap_or("")
                 .to_string();
-            let start_line = doc.get_first(start_field).and_then(|v| v.as_u64()).unwrap_or(0);
-            let end_line = doc.get_first(end_field).and_then(|v| v.as_u64()).unwrap_or(0);
+            let start_line = doc
+                .get_first(start_field)
+                .and_then(|v| v.as_u64())
+                .unwrap_or(0);
+            let end_line = doc
+                .get_first(end_field)
+                .and_then(|v| v.as_u64())
+                .unwrap_or(0);
             let snippet = doc
                 .get_first(content_field)
                 .and_then(|v| v.as_str())
@@ -232,7 +245,7 @@ impl DocsIndex {
 }
 
 /// Returns true if this file should be indexed for documentation search.
-fn should_index_for_docs(path: &str) -> bool {
+pub fn should_index_for_docs(path: &str) -> bool {
     let lower = path.to_lowercase();
     // Always index markdown, text, and documentation files.
     if lower.ends_with(".md")

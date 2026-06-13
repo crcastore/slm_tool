@@ -47,10 +47,7 @@ pub fn file_blame(
                 .and_then(|s| s.name().ok())
                 .unwrap_or("unknown")
                 .to_string();
-            let timestamp = sig
-                .as_ref()
-                .map(|s| s.when().seconds())
-                .unwrap_or(0);
+            let timestamp = sig.as_ref().map(|s| s.when().seconds()).unwrap_or(0);
             lines.push(BlameLine {
                 line: line_number,
                 content: file_line.to_string(),

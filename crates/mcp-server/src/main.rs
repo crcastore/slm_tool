@@ -1,6 +1,6 @@
 use anyhow::Context;
 use mcp_server::CodeAssistantServer;
-use rmcp::{ServiceExt, transport::stdio};
+use rmcp::{transport::stdio, ServiceExt};
 use std::path::PathBuf;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 

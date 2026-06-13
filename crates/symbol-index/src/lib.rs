@@ -4,8 +4,8 @@ pub mod references;
 pub mod symbols;
 
 pub use parser::SymbolParser;
-pub use symbols::{Symbol, SymbolKind, SymbolIndex};
 pub use references::ReferenceIndex;
+pub use symbols::{Symbol, SymbolIndex, SymbolKind};
 
 use thiserror::Error;
 

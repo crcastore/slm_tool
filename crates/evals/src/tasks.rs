@@ -80,7 +80,11 @@ pub fn sample_tasks(repo_path: &str) -> Vec<EvalTask> {
             TaskKind::ExplainCode,
             "Explain the workspace crawler module",
             repo_path,
-            vec!["crawl".to_string(), "index".to_string(), "gitignore".to_string()],
+            vec![
+                "crawl".to_string(),
+                "index".to_string(),
+                "gitignore".to_string(),
+            ],
             vec!["crates/workspace-index/src/crawler.rs".to_string()],
         ),
         EvalTask::new(

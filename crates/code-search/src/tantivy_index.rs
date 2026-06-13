@@ -5,7 +5,7 @@ use tantivy::{
     collector::TopDocs,
     doc,
     query::QueryParser,
-    schema::{Schema, TEXT, STORED, STRING, Value},
+    schema::{Schema, Value, STORED, STRING, TEXT},
     Index, IndexWriter, TantivyDocument,
 };
 
@@ -97,6 +97,14 @@ impl CodeIndex {
         Ok(self.index.writer(50_000_000)?)
     }
 
+    /// Remove all documents from the index.
+    pub fn clear(&self) -> Result<(), SearchError> {
+        let mut writer = self.writer()?;
+        writer.delete_all_documents()?;
+        writer.commit()?;
+        Ok(())
+    }
+
     /// Search for `query` and return up to `limit` results.
     pub fn search(&self, query: &str, limit: usize) -> Result<Vec<SearchResult>, SearchError> {
         let reader = self.index.reader()?;
@@ -156,6 +164,7 @@ impl CodeIndex {
 
         let root = workspace_root.as_ref();
         let mut writer = self.writer()?;
+        writer.delete_all_documents()?;
         let mut total = 0u64;
 
         let walker = WalkBuilder::new(root)
@@ -222,7 +231,13 @@ mod tests {
         let index = CodeIndex::open_in_memory().unwrap();
         let mut writer = index.writer().unwrap();
         index
-            .add_chunk(&mut writer, "src/auth.rs", 1, 10, "fn create_session(user: &str) -> Session { todo!() }")
+            .add_chunk(
+                &mut writer,
+                "src/auth.rs",
+                1,
+                10,
+                "fn create_session(user: &str) -> Session { todo!() }",
+            )
             .unwrap();
         CodeIndex::commit(&mut writer).unwrap();
 

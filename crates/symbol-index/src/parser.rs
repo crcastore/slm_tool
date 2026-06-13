@@ -1,6 +1,9 @@
-use crate::{symbols::{Symbol, SymbolKind}, SymbolError};
+use crate::{
+    symbols::{Symbol, SymbolKind},
+    SymbolError,
+};
 use std::path::Path;
-use tree_sitter::{Language, Parser, Node};
+use tree_sitter::{Language, Node, Parser};
 
 /// Multi-language symbol parser using Tree-sitter.
 pub struct SymbolParser {
@@ -45,10 +48,7 @@ impl SymbolParser {
             .ok_or_else(|| SymbolError::ParseError(rel_path.to_string()))?;
 
         let root = tree.root_node();
-        let ext = path
-            .extension()
-            .and_then(|e| e.to_str())
-            .unwrap_or("");
+        let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
 
         let symbols = match ext {
             "rs" => extract_rust_symbols(root, content, rel_path),
@@ -394,7 +394,9 @@ pub trait Handler {
         let parser = SymbolParser::new();
         let path = std::path::Path::new("src/auth.rs");
         let lang = tree_sitter_rust::LANGUAGE.into();
-        let symbols = parser.parse_content(source, "src/auth.rs", lang, path).unwrap();
+        let symbols = parser
+            .parse_content(source, "src/auth.rs", lang, path)
+            .unwrap();
         let names: Vec<&str> = symbols.iter().map(|s| s.name.as_str()).collect();
         assert!(names.contains(&"create_session"));
         assert!(names.contains(&"User"));
@@ -418,7 +420,9 @@ def test_create_user():
         let parser = SymbolParser::new();
         let path = std::path::Path::new("service.py");
         let lang = tree_sitter_python::LANGUAGE.into();
-        let symbols = parser.parse_content(source, "service.py", lang, path).unwrap();
+        let symbols = parser
+            .parse_content(source, "service.py", lang, path)
+            .unwrap();
         let names: Vec<&str> = symbols.iter().map(|s| s.name.as_str()).collect();
         assert!(names.contains(&"create_user"));
         assert!(names.contains(&"UserService"));

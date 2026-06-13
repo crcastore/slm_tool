@@ -30,7 +30,6 @@ pub enum GitError {
 /// Open the repository at `path` (or any parent), returning a `git2::Repository`.
 pub fn open_repo(path: impl AsRef<Path>) -> Result<git2::Repository, GitError> {
     let path = path.as_ref();
-    git2::Repository::discover(path).map_err(|_| {
-        GitError::NotARepository(path.to_string_lossy().to_string())
-    })
+    git2::Repository::discover(path)
+        .map_err(|_| GitError::NotARepository(path.to_string_lossy().to_string()))
 }
